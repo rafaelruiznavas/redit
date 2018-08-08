@@ -14,6 +14,8 @@
 
 /*** Definiciones ***/
 #define REDIT_VERSION "0.0.1"
+#define REDIT_TAB_STOP 8
+
 #define CTRL_KEY(k) ((k) & 0x1f)
 
 enum editorKey {
@@ -170,13 +172,13 @@ void editorUpdateRow(erow *row){
 		if(row->chars[j] == '\t') tabs++;
 	}
 	free(row->render);
-	row->render = malloc(row->size+tabs*7+1);
+	row->render = malloc(row->size+tabs*(REDIT_TAB_STOP - 1)+1);
 
 	int idx = 0;
 	for(j=0;j<row->size;j++){
 		if(row->chars[j] == '\t'){
 			row->render[idx++] = ' ';
-			while(idx % 8 != 0) row->render[idx++] = ' ';
+			while(idx % REDIT_TAB_STOP != 0) row->render[idx++] = ' ';
 		}else{
 			row->render[idx++] = row->chars[j];
 		}
