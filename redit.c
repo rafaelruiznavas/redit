@@ -229,6 +229,15 @@ void editorRowInsertChar(erow *row, int at, int c){
 	editorUpdateRow(row);
 }
 
+/*** Operaciones del editor ***/
+void editorInsertChar(int c){
+	if(E.cy == E.numrows){
+		editorAppendRow("",0);
+	}
+	editorRowInsertChar(&E.row[E.cy],E.cx, c);
+	E.cx++;
+}
+
 /*** Entrada/Salida Ficheros ***/
 void editorOpen(char *filename){
 	free(E.filename);
@@ -450,6 +459,9 @@ void editorProcessKeypress(){
 		case ARROW_RIGHT:
 		case ARROW_LEFT:
 			editorMoveCursor(c);
+			break;
+		default:
+			editorInsertChar(c);
 			break;
 	}
 }
