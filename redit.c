@@ -59,6 +59,9 @@ struct editorConfig{
 };
 struct editorConfig E;
 
+/*** Prototipos ***/
+void editorSetStatusMessage(const char *fmt, ...);
+
 /*** Terminal ***/
 void die(const char *s){
 	write(STDOUT_FILENO, "\x1b[2J", 4);
@@ -285,17 +288,19 @@ void editorSave(){
 	int len;
 	char *buf = editorRowsToString(&len);
 	int fd = open(E.filename, O_RDWR | O_CREAT, 0644);
-	if(fd == -1){
-		if(ftruncate(fd, len) == -1){
-			if(write(fd, buf, len) == -1){
+	if(fd != -1){
+		if(ftruncate(fd, len) != -1){
+			if(write(fd, buf, len) != -1){
 				close(fd);
 				free(buf);
+				editorSetStatusMessage("%d bytes escritos a disco", len);
 				return;
 			}
 		}
 		close(fd);
 	}
 	free(buf);
+	editorSetStatusMessage("No se ha podido grabar! Error I/O: %s", strerror(errno));
 }
 
 /*** Buffer Append ***/
