@@ -526,7 +526,8 @@ void editorProcessKeypress(){
 		case BACKSPACE:
 		case CTRL_KEY('h'):
 		case DEL_KEY:
-			// TODO
+			if(c == DEL_KEY) editorMoveCursor(ARROW_RIGHT);
+			editorDelChar();
 			break;
 		case PAGE_UP:
 		case PAGE_DOWN:{
@@ -554,6 +555,7 @@ void editorProcessKeypress(){
 			editorInsertChar(c);
 			break;
 	}
+	quit_times = REDIT_QUIT_TIMES;
 }
 /*** Init ***/
 void initEditor(){
